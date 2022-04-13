@@ -1,0 +1,4 @@
+
+Endpoint='https://api.lufthansa.com/v1'
+Near_airport=f'references/airports/nearest/{latitude},{longitude}'
+flight_status='operations/flightstatus/departures/{airportcode}/{yyyy-mm-ddTHH:MM}'

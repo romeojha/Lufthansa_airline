@@ -1,3 +1,17 @@
+#signin lufthansa, get access tokens
+#get refernces
+#req nearest airport with headers
+#use only top 3 international airports
+#get data and print airport names
+#later, return list appended,with airport code
+
+
+#get refrence ,implement with header,pass single data
+#try passing multiple and remove statuscode error
+#access arrival airports
+#print all arrival airport and flights and terminals
+
+
 
 Endpoint='https://api.lufthansa.com/v1'
 Near_airport=f'references/airports/nearest/{latitude},{longitude}'

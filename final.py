@@ -15,7 +15,7 @@ def Nearst_airport():
     response=req.json()
     airport=response['NearestAirportResource']['Airports']['Airport']
     list1=[]
-    for i in range(3):
+    for i in range(5):
         airport_name=airport[i]['AirportCode']
         list1.append(airport_name)
     return list1	#a list of nearest airport codes.
@@ -23,7 +23,7 @@ def Nearst_airport():
 Airports=Nearst_airport()   #calling nearest airport fucntion
 
 def terminalTime(Airports):
-    Time='2022-04-13T00:00'	#input time to calculate
+    Time='2022-04-12T00:00'	#input time to calculate
     Endpoint='https://api.lufthansa.com/v1'
     Auth_key={'Authorization': 'Bearer 8mw94bekyew3ba9phmns37zs'}
     for item in Airports:
@@ -35,9 +35,10 @@ def terminalTime(Airports):
 
             AAirport_code=status['Arrival']['AirportCode']
             A_terminal=status['Arrival']['Terminal']
-            arrival_time=status['Arrival']['EstimatedTimeLocal'] ['DateTime']	#change this to status['Arrival']['EstimatedTimeLocal'] ['DateTime'] if you input future time 
+            arrival_time=status['Arrival']['ActualTimeLocal'] ['DateTime']	#change this to status['Arrival']['EstimatedTimeLocal'] ['DateTime'] if you input future time 
             print(f'arrival airport code is {AAirport_code} in Terminal {A_terminal} on date,time{arrival_time}')
 
         else:
-            print(f'no flight from {item} Airport today') 
+            print(f'no flight of lufthansa airline from {item} Airport on given time') 
 terminalTime(Airports)
+

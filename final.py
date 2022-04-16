@@ -1,43 +1,56 @@
 import requests
 
-#calculating nearest airports
-def Nearst_airport():
-    latitude=28.4504
-    longitude=77.2837
+# change this auth key
+Authentication_key = {'Authorization': 'Bearer wyg2rd58f2jqdmb29bysqge'}
 
-#api parameters
-    Endpoint='https://api.lufthansa.com/v1'
-    Near_airport=f'references/airports/nearest/{latitude},{longitude}'
-    Auth_key={'Authorization': 'Bearer 8mw94bekyew3ba9phmns37zs'}
 
-#request and response of endpoints
-    req=requests.get(f'{Endpoint}/{Near_airport}', headers=Auth_key)
-    response=req.json()
-    airport=response['NearestAirportResource']['Airports']['Airport']
+# calculating nearest airports
+def Nearst_airport(Auth_key):
+    latitude = 51.1657   
+    longitude = 10.4515
 
-    list1=[]
-    for i in range(0,3):
-        airport_name=airport[i]['AirportCode']
+    # api parameters
+    Endpoint = 'https://api.lufthansa.com/v1'
+    Near_airport = f'references/airports/nearest/{latitude},{longitude}'
+
+    # request and response of endpoints
+    req = requests.get(f'{Endpoint}/{Near_airport}', headers=Auth_key)
+    response = req.json()
+    airport = response['NearestAirportResource']['Airports']['Airport']
+
+    list1 = []
+    for i in range(5):
+        airport_name = airport[i]['AirportCode']
         list1.append(airport_name)
-    return list1	#a list of nearest airport codes.
+    return list1  # a list of nearest airport codes.
 
-Airports=Nearst_airport()   #calling nearest airport fucntion
 
-def terminalTime(Airports):
-    Time='2022-04-13T00:00'	#input time to calculate
-    Endpoint='https://api.lufthansa.com/v1'
-    Auth_key={'Authorization': 'Bearer 8mw94bekyew3ba9phmns37zs'}
+# calling nearest airport fucntion
+Airport_list = Nearst_airport(Auth_key=Authentication_key)
+
+
+def terminalTime(Airports, Auth_key):
+    Time = '2022-04-17T00:00'  # input time to calculate
+    Endpoint = 'https://api.lufthansa.com/v1'
     for item in Airports:
-        flight_status=f'operations/flightstatus/departures/{item}/{Time}'
-        req1=requests.get(f'{Endpoint}/{flight_status}', headers=Auth_key)
-        if 199<req1.status_code<300: # if flight code is success.
-            response1=req1.json()
-            status=response1['FlightStatusResource']['Flights']['Flight'][0]
-            AAirport_code=status['Arrival']['AirportCode']
-            A_terminal=status['Arrival']['Terminal']    #add ['Terminal'] on this if it has terminals
-            arrival_time=status['Arrival']['ActualTimeLocal']	#change this to status['Arrival']['EstimatedTimeLocal'] ['DateTime'] if you input future time 
-            print(f'arrival airport code is {AAirport_code} in Terminal {A_terminal} on date,time{arrival_time}')
+        flight_status = f'operations/flightstatus/departures/{item}/{Time}'
+        req1 = requests.get(f'{Endpoint}/{flight_status}', headers=Auth_key)
+        if 199 < req1.status_code < 300:  # if flight code is success.
+            response1 = req1.json()
+            status = response1['FlightStatusResource']['Flights']['Flight'][0]
+            Departure_airport = status['Departure']['AirportCode']
+            AAirport_code = status['Arrival']['AirportCode']
+            try:
+                arrival_time = status['Arrival']['ActualTimeLocal']
+                A_terminal = status['Arrival']['Terminal']
+            except KeyError:
+                A_terminal="N/A"
+                arrival_time=status['Arrival']['ScheduledTimeLocal']
+
+            print(
+                f'Departed from {Departure_airport} and arrival airport code is {AAirport_code} in Terminal {A_terminal} on {arrival_time}')
 
         else:
-            print(f'no flight of lufthansa airline from {item} Airport on given date') 
-terminalTime(Airports)
+            print(
+                f'no flight of lufthansa airline from {item} Airport on given date')
+

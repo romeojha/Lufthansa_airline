@@ -1,13 +1,13 @@
 import requests
 
 # change this auth key
-Authentication_key = {'Authorization': 'Bearer wyg2rd58f2jqdmb29bysqge'}
+Authentication_key = {'Authorization': 'Bearer 6wyg2rd58f2jqdmb29bysqge'}
 
 
 # calculating nearest airports
 def Nearst_airport(Auth_key):
-    latitude = 51.1657   
-    longitude = 10.4515
+    latitude = 51
+    longitude = 10
 
     # api parameters
     Endpoint = 'https://api.lufthansa.com/v1'
@@ -30,7 +30,7 @@ Airport_list = Nearst_airport(Auth_key=Authentication_key)
 
 
 def terminalTime(Airports, Auth_key):
-    Time = '2022-04-17T00:00'  # input time to calculate
+    Time = '2022-04-15T00:00'  # input time to calculate
     Endpoint = 'https://api.lufthansa.com/v1'
     for item in Airports:
         flight_status = f'operations/flightstatus/departures/{item}/{Time}'
@@ -42,10 +42,12 @@ def terminalTime(Airports, Auth_key):
             AAirport_code = status['Arrival']['AirportCode']
             try:
                 arrival_time = status['Arrival']['ActualTimeLocal']
+            except KeyError:
+                arrival_time=status['Arrival']['ScheduledTimeLocal']
+            try:
                 A_terminal = status['Arrival']['Terminal']
             except KeyError:
-                A_terminal="N/A"
-                arrival_time=status['Arrival']['ScheduledTimeLocal']
+                A_terminal = 'N/A'
 
             print(
                 f'Departed from {Departure_airport} and arrival airport code is {AAirport_code} in Terminal {A_terminal} on {arrival_time}')
@@ -53,4 +55,5 @@ def terminalTime(Airports, Auth_key):
         else:
             print(
                 f'no flight of lufthansa airline from {item} Airport on given date')
+terminalTime(Airports=Airport_list, Auth_key=Authentication_key)
 
